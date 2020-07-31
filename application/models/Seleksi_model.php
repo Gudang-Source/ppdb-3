@@ -43,10 +43,10 @@ class Seleksi_model extends CI_Model
 
     public function cari()
     {
-        $this->db->where('nopen', $this->input->post('cari'));
+        $this->db->where('biodata.nopen', $this->input->post('cari'));
         $this->db->select('*');
-        $this->db->from('hasil_seleksi');
-        $this->db->join('biodata', 'biodata.user_id = hasil_seleksi.user_id');
+        $this->db->from('user');
+        $this->db->join('biodata', 'biodata.user_id = user.id');
         return $this->db->get()->result_array();
     }
 }
