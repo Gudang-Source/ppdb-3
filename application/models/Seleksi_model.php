@@ -33,7 +33,7 @@ class Seleksi_model extends CI_Model
     public function getHasil($limit, $start)
     {
         $this->db->limit($limit, $start);
-        $this->db->order_by('user.score', 'DESC');
+        $this->db->order_by('biodata.nopen', 'ASC');
         $this->db->select('*');
         $this->db->from('user');
         $this->db->join('biodata', 'biodata.user_id = user.id');
