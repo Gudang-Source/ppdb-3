@@ -6,6 +6,7 @@ class Login extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
+        $this->load->model('Pendaftaran_model');
     }
     public function index()
     {
@@ -106,15 +107,7 @@ class Login extends CI_Controller
             $this->db->insert('user', $data);
             $user_id = $this->db->insert_id();
             
-            // Buat nomor pendaftaran
-            $this->db->order_by('nopen', 'DESC');
-            $query = $this->db->get('biodata', 1);
-            $no_pendaftaran = date('Y') + "0001";
-            if ($query->num_rows() > 0) {
-                $result = $query->row();
-
-                $no_pendaftaran = $result->nopen + 1;
-            }
+            $no_pendaftaran = $this->Pendaftaran_model->getNomorPendaftaran();
 
             $biodata = [
                 'nopen' => $no_pendaftaran,

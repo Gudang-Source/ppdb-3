@@ -21,4 +21,13 @@ class User_model extends CI_Model
         $this->db->join('user', 'user.id = biodata.user_id');
         return $this->db->get()->result_array();
     }
+
+    public function getPaginatedUsersBioData($limit, $start)
+    {   
+        $this->db->limit($limit, $start);
+        $this->db->select('*');
+        $this->db->from('biodata');
+        $this->db->join('user', 'user.id = biodata.user_id');
+        return $this->db->get()->result_array();
+    }
 }

@@ -1,11 +1,162 @@
 <?php
+include APPPATH . 'third_party/faker/autoload.php';
 
 class Pendaftaran_model extends CI_Model
 {
+    // buat data seed untuk 50 pendaftar
+    public function seed()
+    {
+        $faker = Faker\Factory::create();
+
+        for($i = 0; $i < 50; $i++) {
+            $user_data = array(
+                'name' => $faker->name,
+                'email' => $faker->email,
+                'image' => 'default.jpg',
+                'password' => password_hash('userpassword', PASSWORD_DEFAULT),
+                'role_id' => 2,
+                'is_active' => 1,
+                'status' => 'pendaftar',
+                'date_created' => time(),
+                'score' => 0
+            );
+            $this->db->insert('user', $user_data);
+            $user_id = $this->db->insert_id();
+
+            $biodata = array(
+                'nopen' => $this->getNomorPendaftaran(),
+                'nik' => $faker->randomNumber(8),
+                'nisn' => $faker->randomNumber(8),
+                'noun' => $faker->randomNumber(8),
+                'school' => $faker->company,
+                'year_graduated' => $faker->numberBetween(2018, 2020),
+                'fullname' => $faker->name,
+                'gender' => $faker->randomElement($array = array('Male', 'Female')),
+                'born_place' => $faker->randomElement($array = array('Bandung', 'Kab. Bandung', 'Cimahi')),
+                'date' => $faker->numberBetween(1, 30) . $faker->monthName() . $faker->numberBetween(1998, 2004),
+                'alamat' => $faker->address,
+                'user_id' => $user_id,
+                'verified' => 0,
+                'father_name' => $faker->name('male'),
+                'father_job' => $faker->jobTitle,
+                'father_address' => $faker->address,
+                'father_phone' => $faker->phoneNumber,
+                'mother_name' => $faker->name('female'),
+                'mother_job' => $faker->jobTitle,
+                'mother_address' => $faker->address,
+                'mother_phone' => $faker->phoneNumber,
+            );
+
+            $this->db->insert('biodata', $biodata);
+
+            $scan_raport = array(
+                'filename' => 'document.pdf',
+                'user_id' => $user_id
+            );
+            $this->db->insert('scan_raport', $scan_raport);
+
+            $nilai_agama = array(
+                'user_id' => $user_id,
+                'mata_pelajaran' => 'agama',
+                'semester_1' => $faker->numberBetween(75, 95),
+                'semester_2' => $faker->numberBetween(75, 95),
+                'semester_3' => $faker->numberBetween(75, 95),
+                'semester_4' => $faker->numberBetween(75, 95),
+                'semester_5' => $faker->numberBetween(75, 95),
+            );
+            $this->db->insert('nilai_raport', $nilai_agama);
+
+            $nilai_ppkn = array(
+                'user_id' => $user_id,
+                'mata_pelajaran' => 'ppkn',
+                'semester_1' => $faker->numberBetween(75, 95),
+                'semester_2' => $faker->numberBetween(75, 95),
+                'semester_3' => $faker->numberBetween(75, 95),
+                'semester_4' => $faker->numberBetween(75, 95),
+                'semester_5' => $faker->numberBetween(75, 95),
+            );
+            $this->db->insert('nilai_raport', $nilai_ppkn);
+
+            $nilai_b_indonesia = array(
+                'user_id' => $user_id,
+                'mata_pelajaran' => 'b_indonesia',
+                'semester_1' => $faker->numberBetween(75, 95),
+                'semester_2' => $faker->numberBetween(75, 95),
+                'semester_3' => $faker->numberBetween(75, 95),
+                'semester_4' => $faker->numberBetween(75, 95),
+                'semester_5' => $faker->numberBetween(75, 95),
+            );
+            $this->db->insert('nilai_raport', $nilai_b_indonesia);
+
+            $nilai_matematika = array(
+                'user_id' => $user_id,
+                'mata_pelajaran' => 'matematika',
+                'semester_1' => $faker->numberBetween(75, 95),
+                'semester_2' => $faker->numberBetween(75, 95),
+                'semester_3' => $faker->numberBetween(75, 95),
+                'semester_4' => $faker->numberBetween(75, 95),
+                'semester_5' => $faker->numberBetween(75, 95),
+            );
+            $this->db->insert('nilai_raport', $nilai_matematika);
+
+            $nilai_ipa = array(
+                'user_id' => $user_id,
+                'mata_pelajaran' => 'ipa',
+                'semester_1' => $faker->numberBetween(75, 95),
+                'semester_2' => $faker->numberBetween(75, 95),
+                'semester_3' => $faker->numberBetween(75, 95),
+                'semester_4' => $faker->numberBetween(75, 95),
+                'semester_5' => $faker->numberBetween(75, 95),
+            );
+            $this->db->insert('nilai_raport', $nilai_ipa);
+
+            $nilai_ips = array(
+                'user_id' => $user_id,
+                'mata_pelajaran' => 'ips',
+                'semester_1' => $faker->numberBetween(75, 95),
+                'semester_2' => $faker->numberBetween(75, 95),
+                'semester_3' => $faker->numberBetween(75, 95),
+                'semester_4' => $faker->numberBetween(75, 95),
+                'semester_5' => $faker->numberBetween(75, 95),
+            );
+            $this->db->insert('nilai_raport', $nilai_ips);
+
+            $nilai_b_inggris = array(
+                'user_id' => $user_id,
+                'mata_pelajaran' => 'b_inggris',
+                'semester_1' => $faker->numberBetween(75, 95),
+                'semester_2' => $faker->numberBetween(75, 95),
+                'semester_3' => $faker->numberBetween(75, 95),
+                'semester_4' => $faker->numberBetween(75, 95),
+                'semester_5' => $faker->numberBetween(75, 95),
+            );
+            $this->db->insert('nilai_raport', $nilai_b_inggris);
+        }
+
+        $this->User_model->setStatus($user_id, 'terdaftar');
+        $this->Pendaftaran_model->hitungScore($user_id);
+        $this->Pendaftaran_model->verifikasiBiodata($user_id);
+
+        echo "Data Seed Success!";
+    }
+
+
+    public function getNomorPendaftaran()
+    {
+        // Buat nomor pendaftaran
+        $this->db->order_by('nopen', 'DESC');
+        $query = $this->db->get('biodata', 1);
+        $no_pendaftaran = date('Y') + "0001";
+        if ($query->num_rows() > 0) {
+            $result = $query->row();
+
+            $no_pendaftaran = $result->nopen + 1;
+        }
+        return $no_pendaftaran;
+    }
 
     public function tambahDataBiodata()
     {
-
         $data = [
             "nik" => $this->input->post('nik', true),
             "nisn" => $this->input->post('nisn', true),
@@ -29,6 +180,12 @@ class Pendaftaran_model extends CI_Model
 
         $this->db->where('nopen',  $this->input->post('nopen'));
         $this->db->update('biodata', $data);
+    }
+
+    public function verifikasiBiodata($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->update('biodata', ['verified' => 1]);
     }
 
     public function tambahDataRaport()
@@ -179,6 +336,7 @@ class Pendaftaran_model extends CI_Model
 
         return NULL;
     }
+
 
     private function insertNilai($mapel)
     {

@@ -34,22 +34,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <?php $i = 1; ?>
-                        <?php foreach ($biodata as $bio) : ?>
-                            <th scope="row"><?= $i; ?></th>
-                            <td><?= $bio['nopen']; ?></td>
-                            <td><?= $bio['fullname']; ?></td>
-                            <td><?= $bio['noun']; ?></td>
-                            <td><?= $bio['school']; ?></td>
-                            <td><p class="<?= $bio['status'] == 'terdaftar' ?  'text-primary' : ''; ?>"><?= $bio['status']; ?></p></td>
-                            <td>
-                                <a href="<?= base_url('seleksi/detail/'.$bio['user_id']) ?>" class="badge badge-success">Detail</a>
-                            </td>
-                    </tr>
-                    <?php $i++; ?>
+                   
+                <?php foreach ($biodata as $bio) : ?>
+                <tr>
+                    <th scope="row"><?= $i; ?></th>
+                    <td><?= $bio['nopen']; ?></td>
+                    <td><?= $bio['fullname']; ?></td>
+                    <td><?= $bio['noun']; ?></td>
+                    <td><?= $bio['school']; ?></td>
+                    <td><p class="<?= $bio['status'] == 'terdaftar' ?  'text-primary' : ''; ?>"><?= $bio['status']; ?></p></td>
+                    <td>
+                        <a href="<?= base_url('seleksi/detail/'.$bio['user_id']) ?>" class="badge badge-success">Detail</a>
+                    </td>
+                </tr>
+                <?php $i++; ?>
                 <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
+        <p><?= $this->pagination->create_links() ?></p>
     </div>

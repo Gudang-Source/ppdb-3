@@ -182,8 +182,6 @@ class Pendaftaran extends CI_Controller
         $config['allowed_types']        = 'pdf';
         $this->load->library('upload', $config);
 
-        
-
         if (!$this->upload->do_upload('raport')) {
   
             $this->session->set_flashdata(
@@ -225,11 +223,23 @@ class Pendaftaran extends CI_Controller
 
         force_download('uploads/'.$raport['filename'],NULL);
     }
+    public function processall()
+    {
+        $users = $this->db->get('user')->result_array();
+
+        foreach ($users as $user) {
+        $this->User_model->setStatus($user['id'], 'terdaftar');
+        $this->Pendaftaran_model->hitungScore($user['id']);
+        $this->Pendaftaran_model->verifikasiBiodata($user['id']);
+        }
+    }
 
     public function approve($id)
     {
         $this->User_model->setStatus($id, 'terdaftar');
         $this->Pendaftaran_model->hitungScore($id);
+        $this->Pendaftaran_model->verifikasiBiodata($id);
+        
         $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">User berhasil di approve!</div>');
         redirect('/seleksi');
     }
@@ -239,5 +249,10 @@ class Pendaftaran extends CI_Controller
         $this->User_model->setStatus($id, 'revisi');
         $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">User berhasil di approve!</div>');
         redirect('/seleksi');
+    }
+
+    public function seed()
+    {
+        $this->Pendaftaran_model->seed();
     }
 }

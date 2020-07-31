@@ -7,15 +7,48 @@ class Seleksi extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('pagination');
         $this->load->model('Pendaftaran_model');
         $this->load->model('User_model');
+        $this->load->model('Seleksi_model');
     }
 
     public function index()
     {
         $data['title'] = 'Data Pendaftar';
 
-        $data['biodata'] = $this->User_model->getUsersBiodata();
+        $config['total_rows'] = $this->db->count_all('user');
+        $config['per_page'] = 10;
+
+        $config['base_url'] = site_url('seleksi/index');
+        $config['first_link']       = 'First';
+        $config['last_link']        = 'Last';
+        $config['next_link']        = 'Next';
+        $config['prev_link']        = 'Prev';
+        $config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-center">';
+        $config['full_tag_close']   = '</ul></nav></div>';
+        $config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
+        $config['num_tag_close']    = '</span></li>';
+        $config['cur_tag_open']     = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close']    = '<span class="sr-only">(current)</span></span></li>';
+        $config['next_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['next_tagl_close']  = '<span aria-hidden="true">&raquo;</span></span></li>';
+        $config['prev_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['prev_tagl_close']  = '</span>Next</li>';
+        $config['first_tag_open']   = '<li class="page-item"><span class="page-link">';
+        $config['first_tagl_close'] = '</span></li>';
+        $config['last_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['last_tagl_close']  = '</span></li>';
+        
+
+        $this->pagination->initialize($config);
+        
+        $limit = $config['per_page'];
+        $start = $this->uri->segment(3) ? $this->uri->segment(3) : 0;
+
+        $data['biodata'] = $this->User_model->getPaginatedUsersBiodata($limit, $start);
+
+        $data['i'] = $start + 1;
 
         $this->load->view('templates/hal_header', $data);
         $this->load->view('templates/hal_sidebar', $data);
@@ -41,10 +74,12 @@ class Seleksi extends CI_Controller
     public function cari()
     {
         $data['title'] = 'Detail Siswa';
-        $data['biodata'] = $this->db->get_where('biodata', ['nopen' => $this->session->userdata('nopen')])->row_array();
+        $data['biodata'] = $this->db->get_where('biodata', ['nopen' => $this->input->post('cari')])->row_array();
 
-        $data['index'] = $this->db->get('biodata')->result_array();
-
+        $user_id = $data['biodata']['user_id'];
+        $data['raport'] = $this->Pendaftaran_model->getNilaiRaportbyId($user_id);
+        $data['user_id'] = $user_id;
+        $data['file_raport'] = $this->Pendaftaran_model->getFileRaportbyId($user_id);
         $this->load->view('templates/hal_header', $data);
         $this->load->view('templates/hal_sidebar', $data);
         $this->load->view('templates/hal_topbar', $data);
@@ -52,8 +87,66 @@ class Seleksi extends CI_Controller
         $this->load->view('templates/hal_footer');
     }
 
+    public function carifromhasil()
+    {
+        $data['title'] = 'Hasil Seleksi';
+
+        $data['users'] = $this->Seleksi_model->cari();
+        $data['i'] = 1;
+
+        $this->load->view('templates/hal_header', $data);
+        $this->load->view('templates/hal_sidebar', $data);
+        $this->load->view('templates/hal_topbar', $data);
+        $this->load->view('seleksi/hasilseleksi', $data);
+        $this->load->view('templates/hal_footer');
+    }
+
+    public function prosesseleksi()
+    {
+        $this->Seleksi_model->proses();
+    }
+
     public function hasilseleksi()
     {
+        $data['title'] = 'Hasil Seleksi';
+
+        $config['total_rows'] = $this->db->count_all('hasil_seleksi');
+        $config['per_page'] = 10;
+
+        $config['base_url'] = site_url('seleksi/hasilseleksi');
+        $config['first_link']       = 'First';
+        $config['last_link']        = 'Last';
+        $config['next_link']        = 'Next';
+        $config['prev_link']        = 'Prev';
+        $config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-center">';
+        $config['full_tag_close']   = '</ul></nav></div>';
+        $config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
+        $config['num_tag_close']    = '</span></li>';
+        $config['cur_tag_open']     = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close']    = '<span class="sr-only">(current)</span></span></li>';
+        $config['next_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['next_tagl_close']  = '<span aria-hidden="true">&raquo;</span></span></li>';
+        $config['prev_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['prev_tagl_close']  = '</span>Next</li>';
+        $config['first_tag_open']   = '<li class="page-item"><span class="page-link">';
+        $config['first_tagl_close'] = '</span></li>';
+        $config['last_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['last_tagl_close']  = '</span></li>';
         
+
+        $this->pagination->initialize($config);
+        
+        $limit = $config['per_page'];
+        $start = $this->uri->segment(3) ? $this->uri->segment(3) : 0;
+
+        $data['users'] = $this->Seleksi_model->getHasil($limit, $start);
+
+        $data['i'] = $start + 1;
+
+        $this->load->view('templates/hal_header', $data);
+        $this->load->view('templates/hal_sidebar', $data);
+        $this->load->view('templates/hal_topbar', $data);
+        $this->load->view('seleksi/hasilseleksi', $data);
+        $this->load->view('templates/hal_footer');
     }
 }
