@@ -40,6 +40,7 @@ class Seleksi_model extends CI_Model
         $this->db->select('*');
         $this->db->from('hasil_seleksi');
         $this->db->join('biodata', 'biodata.user_id = hasil_seleksi.user_id');
+        $this->db->join('user', 'user.id = hasil_seleksi.user_id');
         $result =  $this->db->get();
 
         if ($result->num_rows() > 0) {

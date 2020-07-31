@@ -17,7 +17,7 @@ class Seleksi extends CI_Controller
     {
         $data['title'] = 'Data Pendaftar';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-        
+
         $config['total_rows'] = $this->db->count_all('user');
         $config['per_page'] = 10;
         $data['role'] = $this->session->userdata('role_id');
@@ -63,6 +63,7 @@ class Seleksi extends CI_Controller
     {
         $data['role'] = $this->session->userdata('role_id');
         $data['title'] = 'Detail Siswa';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $data['biodata'] = $this->db->get_where('biodata', ['user_id' => $user_id])->row_array();
         $data['raport'] = $this->Pendaftaran_model->getNilaiRaportbyId($user_id);
         $data['user_id'] = $user_id;
@@ -76,6 +77,7 @@ class Seleksi extends CI_Controller
 
     public function cari()
     {
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $data['title'] = 'Detail Siswa';
         $data['biodata'] = $this->db->get_where('biodata', ['nopen' => $this->input->post('cari')])->row_array();
         $data['role'] = $this->session->userdata('role_id');
@@ -93,8 +95,9 @@ class Seleksi extends CI_Controller
     public function carifromhasil()
     {
         $data['title'] = 'Hasil Seleksi';
-        
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $data['users'] = $this->Seleksi_model->cari();
+        $data['role'] = $this->session->userdata('role_id');
         $data['i'] = 1;
 
         $this->load->view('templates/hal_header', $data);
@@ -167,7 +170,7 @@ class Seleksi extends CI_Controller
        
         $data['hasil'] = 'Tidak Lulus';
         $data['title'] = 'Hasil Seleksi';
-        $data['role'] = $this->session->userdata('role');
+
 
         if ($hasil != null) {
             $data['hasil'] = 'Lulus';

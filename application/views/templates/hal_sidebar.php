@@ -8,14 +8,27 @@
         <div class="sidebar-brand-text mx-3">PPDB<br>SMAN 1 DIPATIUKUR</div>
     </a>
 
+    <?php if ($role == 1) { ?>
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!--Query Menu-->
-
-    <!-- LOOPING MENU -->
     <div class="sidebar-heading">
-        user </div>
+        Admin
+    </div>
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item ">
+        <a class="nav-link pb-0" href="<?= base_url() . 'admin' ?>">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
+    
+    <?php } ?>
+
+    <div class="sidebar-heading">
+        user
+    </div>
 
     <!-- SUB-MENU-->
 
