@@ -2,10 +2,6 @@
 
 class Pendaftaran_model extends CI_Model
 {
-    public function getPendaftar()
-    {
-        return $this->db->get('biodata')->result_array();
-    }
 
     public function tambahDataBiodata()
     {
@@ -68,9 +64,12 @@ class Pendaftaran_model extends CI_Model
 
         $data = [];
 
+        // jika nilai raport belum di input return null
         if ($result == NULL) {
             return NULL;
         } else {
+
+            // tambah nilai tiap mapel ke array data
             foreach ($result as $nilai) {
                 $mapel = $nilai['mata_pelajaran'];
 
@@ -80,8 +79,64 @@ class Pendaftaran_model extends CI_Model
             }
         }
 
+        return $data;
+    }
+
+    public function getNilaiRaportbyId($user_id)
+    {
+        // get nilai raport untuk user yg sedang login
+
+        $this->db->where('user_id', $user_id);
+        $result = $this->db->get('nilai_raport')->result_array();
+
+        $data = [];
+
+        // jika nilai raport belum di input return null
+        if ($result == NULL) {
+            return NULL;
+        } else {
+
+            // tambah nilai tiap mapel ke array data
+            foreach ($result as $nilai) {
+                $mapel = $nilai['mata_pelajaran'];
+
+                for ($i = 1; $i <= 5; $i++) {
+                    $data[$mapel . $i] = $nilai['semester_' . $i];
+                }
+            }
+        }
 
         return $data;
+    }
+
+    public function hitungScore($user_id)
+    {
+        // get nilai raport
+        $raport = $this->getNilaiRaportbyId($user_id);
+
+        $hasil = 0;
+        $nilai_mapel = 0;
+
+        // jumlahkan nilai tiap mapel per semester lalu hitung rata2 nya 
+        // tambahkan rata2 nya ke variabel hasil
+        for ($i = 1; $i <= 5; $i++) {
+            $nilai_mapel = 0;
+
+            $nilai_mapel += $raport['agama'.$i];
+            $nilai_mapel += $raport['ppkn'.$i];
+            $nilai_mapel += $raport['b_indonesia'.$i];
+            $nilai_mapel += $raport['matematika'.$i];
+            $nilai_mapel += $raport['ipa'.$i];
+            $nilai_mapel += $raport['ips'.$i];
+            $nilai_mapel += $raport['b_inggris'.$i];
+
+            $average = $nilai_mapel / 7;
+            $hasil += $average;
+        }
+
+        // insert hasil ke user record
+        $this->db->where('id', $user_id);
+        $this->db->update('user', ['score' => $hasil]);
     }
 
     public function insertScanRaport($filename)
@@ -104,6 +159,18 @@ class Pendaftaran_model extends CI_Model
     public function getFileRaport()
     {
         $this->db->where('user_id', $this->session->userdata('id'));
+        $query = $this->db->get('scan_raport');
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array();
+        }
+
+        return NULL;
+    }
+
+    public function getFileRaportbyId($user_id)
+    {
+        $this->db->where('user_id', $user_id);
         $query = $this->db->get('scan_raport');
 
         if ($query->num_rows() > 0) {

@@ -11,7 +11,16 @@
     </div>
   </div>
 
-  <!-- Carousel-->
+  <div class="row">
+    <div class="col-lg-8">
+    <?php if ($user['status'] == 'revisi') {
+      echo '<div class="alert alert-warning" role="alert">Nilai raport tidak sinkron dengan scan raport. Mohon periksa dan revisi lagi</div>';
+  } ?>
+    </div>
+  </div>
+  <!-- Revision Warning -->
+ 
+  <!-- END Revision Warning -->
 
   <!-- BANNER -->
   <div class="card text-center">
@@ -273,7 +282,7 @@
 
     <br>
     <hr>
-    <button type="submit" name="tambah" class="btn btn-primary float-right">Simpan Data</button>
+    <button type="submit" name="tambah" class="btn btn-primary float-right" <?= $user['status'] == 'terdaftar' ? 'disabled' : '' ?>><?= $user['status'] == 'terdaftar' ? 'Data Sudah Diterima' : 'Simpan Data' ?></button>
   </form>
 
 </div>

@@ -7,11 +7,17 @@ class Pendaftaran extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Pendaftaran_model');
+        $this->load->model('User_model');
     }
     public function index()
     {
+        // set title untuk halaman
         $data['title'] = 'Biodata';
+        
+        // get user data untuk di pass ke views
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        
+        // get biodata untuk di pass ke view
         $data['biodata'] = $this->db->get_where('biodata', ['user_id' => $this->session->userdata('id')])->row_array();
 
         $this->load->view('templates/hal_header', $data);
@@ -25,15 +31,15 @@ class Pendaftaran extends CI_Controller
     {
         // get biodata user
         $biodata = $this->db->get_where('biodata', ['user_id' => $this->session->userdata('id')])->row_array();
-
-        if ($biodata['verified'] == 1) {
-            redirect('pendaftaran');
-        }
+        $user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
         $data['title'] = 'Isi Biodata Calon Peserta Didik';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['user'] = $user;
         $data['nopen'] = $biodata['nopen'];
         $data['biodata'] = $biodata;
+
+        // jika sudah terdaftar maka biodata tidak akan bisa diedit
+        $data['editable'] = $user['status'] == 'pendaftar' || $user['status'] == 'revision' ? true : false;
 
         $this->form_validation->set_rules('nopen', 'Nopen');
         $this->form_validation->set_rules('nik', 'NIK', 'required|trim');
@@ -196,7 +202,7 @@ class Pendaftaran extends CI_Controller
                 }
 
                 $this->Pendaftaran_model->updateScanRaport($filename);
-                
+                $this->User_model->setStatus($this->session->userdata('id'), 'diperbarui');
             } else {
                 $this->Pendaftaran_model->insertScanRaport($filename);
             }
@@ -212,5 +218,26 @@ class Pendaftaran extends CI_Controller
         $raport = $this->Pendaftaran_model->getFileRaport();
 
         force_download('uploads/'.$raport['filename'],NULL);
+    }
+
+    public function download_raport_by_id($user_id) {
+        $raport = $this->Pendaftaran_model->getFileRaportbyId($user_id);
+
+        force_download('uploads/'.$raport['filename'],NULL);
+    }
+
+    public function approve($id)
+    {
+        $this->User_model->setStatus($id, 'terdaftar');
+        $this->Pendaftaran_model->hitungScore($id);
+        $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">User berhasil di approve!</div>');
+        redirect('/seleksi');
+    }
+
+    public function revisi($id)
+    {
+        $this->User_model->setStatus($id, 'revisi');
+        $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">User berhasil di approve!</div>');
+        redirect('/seleksi');
     }
 }
