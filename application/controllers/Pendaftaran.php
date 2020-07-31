@@ -159,9 +159,8 @@ class Pendaftaran extends CI_Controller
         } else {
             if ($this->input->post('mode') == 'create') {
                 $this->Pendaftaran_model->tambahDataRaport();
-                if ($this->input->post('raport')) {
-                    $this->uploadRaport('create');
-                }
+                $this->uploadRaport('create');
+                
                 $this->session->set_flashdata(
                     'message',
                     '<div class="alert alert-success" role="alert">Nilai Raport Berhasil Ditambahkan!</div>'
@@ -197,6 +196,7 @@ class Pendaftaran extends CI_Controller
             $filename = $this->upload->data("file_name");
 
             if ($mode == 'update') {
+                die('hit');
                 $raport = $this->Pendaftaran_model->getFileRaport();
 
                 if ($raport != null) {

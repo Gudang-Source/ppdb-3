@@ -11,6 +11,12 @@ class User_model extends CI_Model
         return $this->db->get()->row_array();
     }
 
+    public function getUser($id)
+    {
+        $this->db->where('id', $id);
+        return $this->db->get('user')->row_array();
+    }
+
     public function setStatus($user_id, $status)
     {
         $this->db->where('id', $user_id);

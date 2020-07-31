@@ -110,6 +110,10 @@ class Seleksi extends CI_Controller
     public function prosesseleksi()
     {
         $this->Seleksi_model->proses();
+        $this->session->set_flashdata(
+            'message',
+            '<div class="alert alert-success" role="alert">Proses seleksi sukses dijalankan!</div>'
+        );
         redirect('seleksi/hasilseleksi');
     }
 
@@ -118,9 +122,9 @@ class Seleksi extends CI_Controller
         $data['title'] = 'Hasil Seleksi';
         $data['role'] = $this->session->userdata('role_id');
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
+        
         // Buat configurasi untuk pagination
-        $config['total_rows'] = $this->db->count_all('hasil_seleksi');
+        $config['total_rows'] = $this->db->count_all('user');
         $config['per_page'] = 10;
         $config['base_url'] = site_url('seleksi/hasilseleksi');
         $config['first_link']       = 'First';
@@ -164,20 +168,12 @@ class Seleksi extends CI_Controller
 
     public function hasiluser()
     {
-        $hasil = $this->Seleksi_model->getUserHasil();
+        $user_id = $this->session->userdata('id');
         $data['role'] = $this->session->userdata('role_id');
-        $data['user'] = $hasil;
-       
-        $data['hasil'] = 'Tidak Lulus';
+        $data['user'] = $this->User_model->getUser($user_id);
+        $data['biodata'] = $this->User_model->getBioData($user_id);
         $data['title'] = 'Hasil Seleksi';
 
-
-        if ($hasil != null) {
-            $data['hasil'] = 'Lulus';
-        } else {
-            $user_id = $this->session->userdata('id');
-            $data['user'] = $this->User_model->getBioData($user_id);
-        }
         $this->load->view('templates/hal_header', $data);
         $this->load->view('templates/hal_sidebar', $data);
         $this->load->view('templates/hal_topbar', $data);

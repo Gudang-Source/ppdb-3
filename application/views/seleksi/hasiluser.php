@@ -30,12 +30,12 @@
                 <tbody>
                 <?php if ($user != null) { ?>
                 <tr>
-                    <td><?= $user['nopen']; ?></td>
-                    <td><?= $user['fullname']; ?></td>
-                    <td><?= $user['noun']; ?></td>
-                    <td><?= $user['school']; ?></td>
+                    <td><?= $biodata['nopen']; ?></td>
+                    <td><?= $biodata['fullname']; ?></td>
+                    <td><?= $biodata['noun']; ?></td>
+                    <td><?= $biodata['school']; ?></td>
                     <td><?= $user['score']; ?></td>
-                    <td><?= $hasil ?></td>
+                    <td><?= $user['accepted'] == true ? 'Lulus' : 'Tidak lulus' ?></td>
                 </tr>
                 <?php } else { ?>
                     <tr>

@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col">
-            <a href="<?= base_url(); ?>/seleksi/prosesseleksi" class="btn btn-primary">Proses Seleksi</a>
+            <a href="<?= base_url(); ?>/seleksi/prosesseleksi" class="btn btn-primary my-2">Proses Seleksi</a>
         </div>
     </div>
     <div class="row">
@@ -34,6 +34,7 @@
                         <th scope="col">No Ujian Nasional</th>
                         <th scope="col">Asal Sekolah</th>
                         <th scope="col">Score Nilai</th>
+                        <th scope="col">Hasil</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,6 +47,7 @@
                     <td><?= $user['noun']; ?></td>
                     <td><?= $user['school']; ?></td>
                     <td><?= $user['score']; ?></td>
+                    <td><?= $user['accepted'] == true ? 'Lulus' : 'Tidak lulus' ?></td>
                 </tr>
                 <?php $i++; ?>
                 <?php endforeach; ?>
