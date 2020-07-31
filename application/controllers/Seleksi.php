@@ -85,6 +85,7 @@ class Seleksi extends CI_Controller
         $data['raport'] = $this->Pendaftaran_model->getNilaiRaportbyId($user_id);
         $data['user_id'] = $user_id;
         $data['file_raport'] = $this->Pendaftaran_model->getFileRaportbyId($user_id);
+        
         $this->load->view('templates/hal_header', $data);
         $this->load->view('templates/hal_sidebar', $data);
         $this->load->view('templates/hal_topbar', $data);

@@ -1,17 +1,18 @@
 <?php
 
-class Hasilseleksi extends CI_Controller
+class Datapendaftar extends CI_Controller
 {
     public function __construct()
     {
         parent::__construct();
 
         $this->load->model('Seleksi_model');
+        $this->load->model('User_model');
         $this->load->library('pagination');
     }
 
     public function index()
-    {
+    {   
         // panggil fungsi list agar dapat menampilkan data saat membuka halaman awal
         // atau saat membuka page lain pada pagination
         $this->list();
@@ -19,14 +20,14 @@ class Hasilseleksi extends CI_Controller
 
     public function list()
     {
-        $data['title'] = 'Hasil Seleksi';
+        $data['title'] = 'Data Pendaftar';
 
         // Buat configurasi untuk pagination
         $config['total_rows'] = $this->db->count_all('user');
         $config['per_page'] = 10;
 
         // set base url untuk paginasi
-        $config['base_url'] = site_url('hasilseleksi/list');
+        $config['base_url'] = site_url('datapendaftar/list');
         $config['first_link']       = 'First';
         $config['last_link']        = 'Last';
         $config['next_link']        = 'Next';
@@ -45,10 +46,10 @@ class Hasilseleksi extends CI_Controller
         $config['first_tagl_close'] = '</span></li>';
         $config['last_tag_open']    = '<li class="page-item"><span class="page-link">';
         $config['last_tagl_close']  = '</span></li>';
-
+        
 
         $this->pagination->initialize($config);
-
+        
         $limit = $config['per_page'];
 
         // jika ada angka pada uri segment ke 3 maka data dimulai dari angka tersebut
@@ -60,18 +61,8 @@ class Hasilseleksi extends CI_Controller
         $data['i'] = $start + 1;
 
         $this->load->view('templates/auth_header');
-        $this->load->view('hasilseleksi/index', $data);
+        $this->load->view('datapendaftar/index', $data);
         $this->load->view('templates/auth_footer');
     }
 
-    public function cari()
-    {
-        $data['title'] = 'Hasil Seleksi';
-        $data['users'] = $this->Seleksi_model->cari();
-        $data['i'] = 1;
-
-        $this->load->view('templates/auth_header');
-        $this->load->view('hasilseleksi/index', $data);
-        $this->load->view('templates/auth_footer');
-    }
 }
