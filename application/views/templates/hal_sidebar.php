@@ -69,6 +69,7 @@
                 <i class="fas fa-fw fa-users"></i>
                 <span>Hasil Seleksi</span></a>
         </li>
+        
     <?php } ?>
     <?php if ($role == 2) { ?>
         <li class="nav-item ">
@@ -86,7 +87,11 @@
                 <i class="fab fa-fw fa-wpforms"></i>
                 <span>Raport</span></a>
         </li>
-
+        <li class="nav-item ">
+            <a class="nav-link pb-0" href="<?= base_url() . 'buktidaftar/generate' ?>" target="_blank">
+                <i class="fas fa-fw fa-download"></i>
+                <span>Bukti Pendaftaran</span></a>
+        </li>
         <!-- SELEKSI -->
         <hr class="sidebar-divider mt-3">
         <div class="sidebar-heading">

@@ -25,6 +25,7 @@
                         <th scope="col">Asal Sekolah</th>
                         <th scope="col">Score Nilai</th>
                         <th scope="col">Hasil</th>
+                        <td scope="col">Action</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,7 @@
                     <td><?= $biodata['school']; ?></td>
                     <td><?= $user['score']; ?></td>
                     <td><?= $user['accepted'] == true ? 'Lulus' : 'Tidak lulus' ?></td>
+                    <td><?= $user['accepted'] == true ? '<a href="'.base_url('/cetakhasil/generate').'" class="btn btn-success" target="_blank">Cetak</a>' : '' ?></td>
                 </tr>
                 <?php } else { ?>
                     <tr>
