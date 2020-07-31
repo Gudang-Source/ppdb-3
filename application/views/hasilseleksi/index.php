@@ -30,6 +30,7 @@
                         <th scope="col">No Ujian Nasional</th>
                         <th scope="col">Asal Sekolah</th>
                         <th scope="col">Score Nilai</th>
+                        <th scope="col">Hasil</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,6 +43,7 @@
                     <td><?= $user['noun']; ?></td>
                     <td><?= $user['school']; ?></td>
                     <td><?= $user['score']; ?></td>
+                    <td><?= $user['accepted'] == true ? 'Lulus' : 'Tidak lulus' ?></td>
                 </tr>
                 <?php $i++; ?>
                 <?php endforeach; ?>

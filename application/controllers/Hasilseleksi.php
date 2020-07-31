@@ -20,7 +20,7 @@ class Hasilseleksi extends CI_Controller
         $data['title'] = 'Hasil Seleksi';
 
         // Buat configurasi untuk pagination
-        $config['total_rows'] = $this->db->count_all('hasil_seleksi');
+        $config['total_rows'] = $this->db->count_all('user');
         $config['per_page'] = 10;
 
         // set base url untuk paginasi
