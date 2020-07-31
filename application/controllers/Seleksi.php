@@ -16,7 +16,8 @@ class Seleksi extends CI_Controller
     public function index()
     {
         $data['title'] = 'Data Pendaftar';
-
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        
         $config['total_rows'] = $this->db->count_all('user');
         $config['per_page'] = 10;
         $data['role'] = $this->session->userdata('role_id');
@@ -113,6 +114,8 @@ class Seleksi extends CI_Controller
     {
         $data['title'] = 'Hasil Seleksi';
         $data['role'] = $this->session->userdata('role_id');
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
         // Buat configurasi untuk pagination
         $config['total_rows'] = $this->db->count_all('hasil_seleksi');
         $config['per_page'] = 10;
@@ -161,6 +164,7 @@ class Seleksi extends CI_Controller
         $hasil = $this->Seleksi_model->getUserHasil();
         $data['role'] = $this->session->userdata('role_id');
         $data['user'] = $hasil;
+       
         $data['hasil'] = 'Tidak Lulus';
         $data['title'] = 'Hasil Seleksi';
         $data['role'] = $this->session->userdata('role');

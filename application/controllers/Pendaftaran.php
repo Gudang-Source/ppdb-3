@@ -35,12 +35,12 @@ class Pendaftaran extends CI_Controller
         // get biodata user
         $biodata = $this->db->get_where('biodata', ['user_id' => $this->session->userdata('id')])->row_array();
         $user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
+        
         $data['title'] = 'Isi Biodata Calon Peserta Didik';
         $data['user'] = $user;
         $data['nopen'] = $biodata['nopen'];
         $data['biodata'] = $biodata;
-
+        
         // jika sudah terdaftar maka biodata tidak akan bisa diedit
         $data['editable'] = $user['status'] == 'pendaftar' || $user['status'] == 'revision' ? true : false;
 
