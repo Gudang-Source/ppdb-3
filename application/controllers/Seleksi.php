@@ -19,6 +19,7 @@ class Seleksi extends CI_Controller
 
         $config['total_rows'] = $this->db->count_all('user');
         $config['per_page'] = 10;
+        $data['role'] = $this->session->userdata('role_id');
 
         $config['base_url'] = site_url('seleksi/index');
         $config['first_link']       = 'First';
@@ -59,6 +60,7 @@ class Seleksi extends CI_Controller
 
     public function detail($user_id)
     {
+        $data['role'] = $this->session->userdata('role_id');
         $data['title'] = 'Detail Siswa';
         $data['biodata'] = $this->db->get_where('biodata', ['user_id' => $user_id])->row_array();
         $data['raport'] = $this->Pendaftaran_model->getNilaiRaportbyId($user_id);
@@ -75,7 +77,7 @@ class Seleksi extends CI_Controller
     {
         $data['title'] = 'Detail Siswa';
         $data['biodata'] = $this->db->get_where('biodata', ['nopen' => $this->input->post('cari')])->row_array();
-
+        $data['role'] = $this->session->userdata('role_id');
         $user_id = $data['biodata']['user_id'];
         $data['raport'] = $this->Pendaftaran_model->getNilaiRaportbyId($user_id);
         $data['user_id'] = $user_id;
@@ -90,7 +92,7 @@ class Seleksi extends CI_Controller
     public function carifromhasil()
     {
         $data['title'] = 'Hasil Seleksi';
-
+        
         $data['users'] = $this->Seleksi_model->cari();
         $data['i'] = 1;
 
@@ -104,15 +106,16 @@ class Seleksi extends CI_Controller
     public function prosesseleksi()
     {
         $this->Seleksi_model->proses();
+        redirect('seleksi/hasilseleksi');
     }
 
     public function hasilseleksi()
     {
         $data['title'] = 'Hasil Seleksi';
-
+        $data['role'] = $this->session->userdata('role_id');
+        // Buat configurasi untuk pagination
         $config['total_rows'] = $this->db->count_all('hasil_seleksi');
         $config['per_page'] = 10;
-
         $config['base_url'] = site_url('seleksi/hasilseleksi');
         $config['first_link']       = 'First';
         $config['last_link']        = 'Last';
@@ -137,6 +140,9 @@ class Seleksi extends CI_Controller
         $this->pagination->initialize($config);
         
         $limit = $config['per_page'];
+
+        // jika ada angka pada uri segment ke 3 maka data dimulai dari angka tersebut
+        // jika tidak ada maka data dimulai dari 0
         $start = $this->uri->segment(3) ? $this->uri->segment(3) : 0;
 
         $data['users'] = $this->Seleksi_model->getHasil($limit, $start);
@@ -149,4 +155,26 @@ class Seleksi extends CI_Controller
         $this->load->view('seleksi/hasilseleksi', $data);
         $this->load->view('templates/hal_footer');
     }
+
+    public function hasiluser()
+    {
+        $hasil = $this->Seleksi_model->getUserHasil();
+        $data['role'] = $this->session->userdata('role_id');
+        $data['user'] = $hasil;
+        $data['hasil'] = 'Tidak Lulus';
+        $data['title'] = 'Hasil Seleksi';
+        $data['role'] = $this->session->userdata('role');
+
+        if ($hasil != null) {
+            $data['hasil'] = 'Lulus';
+        } else {
+            $user_id = $this->session->userdata('id');
+            $data['user'] = $this->User_model->getBioData($user_id);
+        }
+        $this->load->view('templates/hal_header', $data);
+        $this->load->view('templates/hal_sidebar', $data);
+        $this->load->view('templates/hal_topbar', $data);
+        $this->load->view('seleksi/hasiluser', $data);
+        $this->load->view('templates/hal_footer');
+}
 }

@@ -34,6 +34,21 @@ class Seleksi_model extends CI_Model
         return $this->db->get()->result_array();
     }
 
+    public function getUserHasil()
+    {
+        $this->db->where('hasil_seleksi.user_id', $this->session->userdata('id'));
+        $this->db->select('*');
+        $this->db->from('hasil_seleksi');
+        $this->db->join('biodata', 'biodata.user_id = hasil_seleksi.user_id');
+        $result =  $this->db->get();
+
+        if ($result->num_rows() > 0) {
+            return $result->row_array();
+        } else {
+            return NULL;
+        }
+    }
+
     public function cari()
     {
         $this->db->where('nopen', $this->input->post('cari'));

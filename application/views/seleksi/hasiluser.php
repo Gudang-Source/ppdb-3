@@ -2,13 +2,8 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
+    <h1 class="h3 mb-4 text-gray-800">Hasil Seleksi</h1>
 
-    <div class="row">
-        <div class="col">
-            <a href="<?= base_url(); ?>/seleksi/prosesseleksi" class="btn btn-primary">Proses Seleksi</a>
-        </div>
-    </div>
     <div class="row">
 
         <div class="col-lg-12">
@@ -21,34 +16,32 @@
 
             <?= $this->session->flashdata('message'); ?>
 
-            <form class="form-inline my-2 my-lg-3" action="<?= base_url('seleksi/carifromhasil') ?>" method="post">
-                <input class="form-control mr-sm-2" type="search" placeholder="No Pendaftaran" name="cari" id="cari" autocomplete="off">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="tombolCari">Search</button>
-            </form>
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">No</th>
                         <th scope="col">No Pendaftaran</th>
                         <th scope="col">Nama</th>
                         <th scope="col">No Ujian Nasional</th>
                         <th scope="col">Asal Sekolah</th>
                         <th scope="col">Score Nilai</th>
+                        <th scope="col">Hasil</th>
                     </tr>
                 </thead>
                 <tbody>
-                   
-                <?php foreach ($users as $user) : ?>
+                <?php if ($user != null) { ?>
                 <tr>
-                    <th scope="row"><?= $i; ?></th>
                     <td><?= $user['nopen']; ?></td>
                     <td><?= $user['fullname']; ?></td>
                     <td><?= $user['noun']; ?></td>
                     <td><?= $user['school']; ?></td>
                     <td><?= $user['score']; ?></td>
+                    <td><?= $hasil ?></td>
                 </tr>
-                <?php $i++; ?>
-                <?php endforeach; ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="4">Mohon Maaf Anda Tidak Lulus</td>
+                    </tr>
+                <?php } ?>
                 </tbody>
             </table>
         </div>

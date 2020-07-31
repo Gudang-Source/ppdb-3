@@ -10,7 +10,9 @@ class Pendaftaran extends CI_Controller
         $this->load->model('User_model');
     }
     public function index()
-    {
+    {   
+        $data['role'] = $this->session->userdata('role_id');
+
         // set title untuk halaman
         $data['title'] = 'Biodata';
         
@@ -29,6 +31,7 @@ class Pendaftaran extends CI_Controller
 
     public function Biodata()
     {
+        $data['role'] = $this->session->userdata('role_id');
         // get biodata user
         $biodata = $this->db->get_where('biodata', ['user_id' => $this->session->userdata('id')])->row_array();
         $user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
@@ -82,6 +85,7 @@ class Pendaftaran extends CI_Controller
 
     public function raport()
     {
+        $data['role'] = $this->session->userdata('role_id');
         $data['title'] = 'Raport';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 

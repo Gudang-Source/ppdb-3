@@ -37,6 +37,9 @@
                 <li class="nav-item">
                     <a class="nav-item nav-link" href="<?= base_url('alur'); ?>">Alur Pendaftaran</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-item nav-link" href="<?= base_url('hasilseleksi'); ?>">Hasil Seleksi</a>
+                </li>
                 <!-- <li class="nav-item">
                     <a class="nav-item nav-link" href="#">Data Pendaftar</a>
                 </li>
